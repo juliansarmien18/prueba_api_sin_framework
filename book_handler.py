@@ -5,7 +5,6 @@ from urllib.parse import  parse_qs, parse_qsl
 
 class BookHandler(BaseHTTPRequestHandler): 
     
-
     def do_GET(self): 
         data = DataOpener().open_data()
         params = self.__get_params()
@@ -24,6 +23,8 @@ class BookHandler(BaseHTTPRequestHandler):
                     for page in book['pages']:
                         if str(page['page']) == params['page']:
                             self.wfile.write(page["content"].encode())
+                else:
+                    self.send_response(404)
     
     def __get_params(self):
         return dict(parse_qsl(self.path[1:]))
