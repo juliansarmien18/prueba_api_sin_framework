@@ -1,6 +1,7 @@
 [
     {
-        "name": "1",
+        "id": 1,
+        "name": "Book 1",
         "pages": [
             {
                 "page": 1,
@@ -25,7 +26,8 @@
         ]
     },
     {
-        "name": "2",
+        "id": 2,
+        "name": "Book 2",
         "pages": [
             {
                 "page": 1,
@@ -50,7 +52,8 @@
         ]
     },
     {
-        "name": "3",
+        "id": 3,
+        "name": "Book 3",
         "pages": [
             {
                 "page": 1,
