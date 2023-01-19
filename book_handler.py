@@ -1,36 +1,31 @@
 from http.server import BaseHTTPRequestHandler 
 from data_opener import DataOpener
+from urllib.parse import  parse_qs, parse_qsl
 
 
 class BookHandler(BaseHTTPRequestHandler): 
-
+    
     def do_GET(self): 
-        data = DataOpener.open_data()
+        data = DataOpener().open_data()
+        params = self.__get_params()
         
-        path_elements = self.path.split('/')
-        del path_elements[0]
-        
-        if path_elements[0] == 'book':
-            parameters = self.__build_dict_parameters(path_elements)
+        if 'book' in params.keys():
             self.send_response(200) 
-            self.send_header('Content-Type', parameters['format']) 
+            self.send_header('Content-Type', params['format']) 
             self.end_headers() 
-            self.__open_page(data, parameters)
+            self.__open_page(data, params)
         else: 
             self.send_response(404) 
             
-    def __open_page(self, data : dict, parameters: dict):
+    def __open_page(self, data : dict, params: dict):
         for book in data:
-                if book['name'] == parameters['book']:
+                if book['name'] == params['book']:
                     for page in book['pages']:
-                        if str(page['page']) == parameters['page']:
+                        if str(page['page']) == params['page']:
                             self.wfile.write(page["content"].encode())
-
-    def __build_dict_parameters(self, path_elements : list) -> dict:
-        return {
-            path_elements[0]: path_elements[1],
-            path_elements[2]: path_elements[3],
-            path_elements[4]: path_elements[5]
-        }
+                else:
+                    self.send_response(404)
     
+    def __get_params(self):
+        return dict(parse_qsl(self.path[1:]))
     
