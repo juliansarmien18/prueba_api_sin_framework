@@ -1,9 +1,12 @@
 from http.server import BaseHTTPRequestHandler
 from data_opener import DataOpener 
 from query_executers.format_executer import FormatExecuter
-from urllib.parse import  parse_qsl
+from query_executers.reading_executer import ReadingExecuter
 
+from urllib.parse import  parse_qsl
 import json
+
+
 
 
 class BookHandler(BaseHTTPRequestHandler): 
@@ -13,21 +16,23 @@ class BookHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         data_opener = DataOpener()
         format_executer = FormatExecuter()
-        formats = format_executer.execute_query()
+        reading_executer = ReadingExecuter()
+        
         params = self.__get_params()
-        books = data_opener.open_data("books.json")
+        formats = format_executer.execute_query(params)
+        books = reading_executer.execute_query(params)
         body = {}
         
         if 'book' in params.keys() and self.__check_format(formats, params['format']):
             body['format'] = params['format']
             
             self.send_response(200) 
-            self.send_header('Content-Type', "text") 
+            self.send_header('Content-Type', params['format']) 
             self.end_headers() 
             body = self.__build_body(books, params, body)
             self.wfile.write(str(json.dumps(body)).encode())
         else: 
-            self.send_response(404) 
+            self.send_response(404, "Not Found") 
             
     #Check if requested format exists on database
     def __check_format(self, formats : list, selected_format : str):
