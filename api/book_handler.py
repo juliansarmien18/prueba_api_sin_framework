@@ -1,5 +1,6 @@
-from http.server import BaseHTTPRequestHandler 
-from data_opener import DataOpener
+from http.server import BaseHTTPRequestHandler
+from data_opener import DataOpener 
+from query_executers.format_executer import FormatExecuter
 from urllib.parse import  parse_qsl
 
 import json
@@ -11,9 +12,10 @@ class BookHandler(BaseHTTPRequestHandler):
         and returns a json with data if exists"""
     def do_GET(self):
         data_opener = DataOpener()
-        books = data_opener.open_data("books.json")
-        formats = data_opener.open_data("formats.json")
+        format_executer = FormatExecuter()
+        formats = format_executer.execute_query()
         params = self.__get_params()
+        books = data_opener.open_data("books.json")
         body = {}
         
         if 'book' in params.keys() and self.__check_format(formats, params['format']):

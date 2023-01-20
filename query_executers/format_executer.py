@@ -1,4 +1,4 @@
-from .query_executer import QueryExecuter
+from query_executers.query_executer import QueryExecuter
 import sqlite3
 import os
 
@@ -16,8 +16,6 @@ class FormatExecuter(QueryExecuter):
             raise sqlite3.DatabaseError
         else:
             return self.build_dict(cursor)
-        
-prueba = FormatExecuter().execute_query()
 
 
 

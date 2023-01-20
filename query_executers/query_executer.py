@@ -1,4 +1,4 @@
-from server import DatabaseStarter
+from server.database_starter import DatabaseStarter
 
 
 class QueryExecuter:
