@@ -1,13 +1,14 @@
 from query_executers.query_executer import QueryExecuter
 import sqlite3
 
-
+#child class from QueryExecuter
 class ReadingExecuter(QueryExecuter):
     def __init__(self) -> None:
         super().__init__()
         self.page_query = "SELECT Books.name, Pages.book_id, Pages.page, Pages.content FROM Books, Pages WHERE  Books.id =? and Pages.book_id = Books.id and Pages.page =?"
         self.book_query = "SELECT Books.name, Pages.book_id, Pages.page, Pages.content FROM Books, Pages WHERE  Books.id =? and Pages.book_id = Books.id"
 
+    #esecute the correct query and build dictionary with its answer
     def execute_query(self, params : dict):
         if params:
             if not 'book' in params.keys():

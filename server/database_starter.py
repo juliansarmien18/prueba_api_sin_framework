@@ -3,13 +3,15 @@ import sqlite3
 
 
 class DatabaseStarter:
-    def __init__(self) -> None:
+    def __init__(self):
+        self.directory = '/data/book_database.db'
         self.db = self.__connect()
     
+    #connect with dabase
     def __connect(self):
-        print(self.__get_parent_directory()+'/data/book_database.db')
-        return sqlite3.connect(self.__get_parent_directory()+'/data/book_database.db')
+        return sqlite3.connect(self.__get_parent_directory()+ self.directory)
 
+    #get parent directory and
     def __get_parent_directory(self):
         list = sys.path[0].split('/')
         return_str = ''

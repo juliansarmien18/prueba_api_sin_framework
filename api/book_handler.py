@@ -13,32 +13,35 @@ class BookHandler(BaseHTTPRequestHandler):
     """Open Json Files, searchs for requested params, uses the reuqested format
         and returns a json with data if exists"""
     def do_GET(self):
+        
+        #initialize variables
         format_executer = FormatExecuter()
         reading_executer = ReadingExecuter()
         
         params = self.__get_params()
         format = format_executer.execute_query(params)
         books = reading_executer.execute_query(params)
-        body = {}
         
+        #build response and return json or 404
         if 'book' in params.keys():
-            if format:
-                body['format'] = params['format']
-            else:
-                body['format'] = 'html'
+            body = self.__build_body(books, format[0])
             self.send_response(200) 
             self.send_header('Content-Type', body['format']) 
             self.end_headers() 
-            body = self.__build_body(books, body)
             self.wfile.write(str(json.dumps(body)).encode())
         else: 
             self.send_response(404, "Not Found") 
 
-    #check json files and build json if requested params are available
-    def __build_body(self, books: list, body : dict):
-        body['books'] = []
+    #build json from dicts given by queries executers
+    def __build_body(self, books: list, format : dict):
+        body = {}
+        if format:
+                body['format'] = format['format']
+        else:
+            body['format'] = 'html'
+        body['data'] = []
         for book in books:
-            body['books'].append(book)
+            body['data'].append(book)
         return body
     
     #splith path and turn it into a dictionary
