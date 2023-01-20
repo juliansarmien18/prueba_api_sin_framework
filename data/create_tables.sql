@@ -6,7 +6,7 @@ CREATE TABLE Books (
 
 CREATE TABLE Formats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    format TEXT NOT NULL,
+    format TEXT NOT NULL
 );
 
 CREATE TABLE Pages (

@@ -218,7 +218,7 @@ book_id
 VALUES(
 1,
 'Mauris placerat tincidunt mi, ut commodo lorem mattis nec',
-4,
+4
 );
 INSERT INTO Pages(
 page,
