@@ -1,0 +1,20 @@
+CREATE TABLE Books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    pages INTEGER NOT NULL
+);
+
+CREATE TABLE Formats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    format TEXT NOT NULL,
+);
+
+CREATE TABLE Pages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    page INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    book_id INTEGER NOT NULL,
+    CONSTRAINT fk_pages_book
+    FOREIGN KEY (book_id) 
+    REFERENCES Books(id)
+);
