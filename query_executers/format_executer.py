@@ -12,13 +12,14 @@ class FormatExecuter(QueryExecuter):
         else:
             requested_format = params['format']
         try:
-            conn = self.db
-            c = conn.cursor()
+            c = self.db
             cursor = c.execute("select * from Formats where format =?;",[requested_format])
         except Exception as e:
             raise sqlite3.DatabaseError
         else:
-            return self.build_dict(cursor)
+            data = self.build_dict(cursor)
+            c.close()
+            return data
 
 
 

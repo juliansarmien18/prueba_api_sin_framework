@@ -1,5 +1,4 @@
 from http.server import BaseHTTPRequestHandler
-from data_opener import DataOpener 
 from query_executers.format_executer import FormatExecuter
 from query_executers.reading_executer import ReadingExecuter
 
@@ -14,49 +13,33 @@ class BookHandler(BaseHTTPRequestHandler):
     """Open Json Files, searchs for requested params, uses the reuqested format
         and returns a json with data if exists"""
     def do_GET(self):
-        data_opener = DataOpener()
         format_executer = FormatExecuter()
         reading_executer = ReadingExecuter()
         
         params = self.__get_params()
-        formats = format_executer.execute_query(params)
+        format = format_executer.execute_query(params)
         books = reading_executer.execute_query(params)
         body = {}
         
-        if 'book' in params.keys() and self.__check_format(formats, params['format']):
-            body['format'] = params['format']
-            
+        if 'book' in params.keys():
+            if format:
+                body['format'] = params['format']
+            else:
+                body['format'] = 'html'
             self.send_response(200) 
-            self.send_header('Content-Type', params['format']) 
+            self.send_header('Content-Type', body['format']) 
             self.end_headers() 
-            body = self.__build_body(books, params, body)
+            body = self.__build_body(books, body)
             self.wfile.write(str(json.dumps(body)).encode())
         else: 
             self.send_response(404, "Not Found") 
-            
-    #Check if requested format exists on database
-    def __check_format(self, formats : list, selected_format : str):
-        for format in formats:
-            if selected_format == format['format']:
-                return True
-        return False
 
     #check json files and build json if requested params are available
-    def __build_body(self, books : dict, params: dict, body : dict):
+    def __build_body(self, books: list, body : dict):
+        body['books'] = []
         for book in books:
-                if book['id'] == int(params['book']) and self.__check_page(book['pages'], int(params['page'])):
-                    body['book'] = book['name']
-                    
-                    for page in book['pages']:
-                        if str(page['page']) == params['page']:
-                            body['page'] = page["content"]
-                            return body
-                else:
-                    self.send_response(404)
-    
-    #check if requested page exists in requested Book
-    def __check_page(self, pages : list, page : int) -> bool:
-        return page <= len(pages)
+            body['books'].append(book)
+        return body
     
     #splith path and turn it into a dictionary
     def __get_params(self) -> dict:

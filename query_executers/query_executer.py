@@ -3,7 +3,7 @@ from server.database_starter import DatabaseStarter
 
 class QueryExecuter:
     def __init__(self) -> None:
-        self.db = DatabaseStarter().db
+        self.db = DatabaseStarter().db.cursor()
     
     def execute_query(self, params=None):
         pass

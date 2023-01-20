@@ -13,9 +13,7 @@ class ReadingExecuter(QueryExecuter):
             if not 'book' in params.keys():
                 raise KeyError
             try:
-                conn = self.db
-                c = conn.cursor()
-                
+                c = self.db
                 if not 'page' in params.keys():
                     cursor = c.execute(self.book_query, [int(params['book'])])
                 else:
@@ -23,4 +21,6 @@ class ReadingExecuter(QueryExecuter):
             except Exception as e:
                 raise sqlite3.DatabaseError
             else:
-                return self.build_dict(cursor)
+                data = self.build_dict(cursor)
+                c.close()
+                return data
